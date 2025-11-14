@@ -89,3 +89,96 @@
   margin-bottom: 30px;
   font-family: "Comic Sans MS", "Bubblegum Sans", cursive;
 }
+
+/* ================================
+   INSTRUCTION BOX
+================================ */
+
+.instruction-box {
+  background: #fff4fa; /* light soft pink */
+  border: 2px solid #ffb6e6;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.instruction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.copy-btn {
+  background: #ff79c6;
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.copy-btn:hover {
+  background: #ff5eb2;
+}
+
+.instruction-content {
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ffb6e6;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  margin-bottom: 10px;
+}
+
+.instruction-footer {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.loading-bar-wrapper {
+  margin-top: 15px;
+  width: 100%;
+  text-align: center;
+}
+
+.loading-bar {
+  width: 100%;
+  max-width: 400px;  /* keeps it nice looking */
+  margin: 0 auto;    /* centers the bar */
+  height: 10px;
+  background: #e0e0ff;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* The animated fill */
+.loading-bar::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: #646cff;
+  width: 0%;
+  animation: loadAnim 1.5s forwards;
+}
+
+@keyframes loadAnim {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+.success-message {
+  margin-top: 15px;
+  color: #2ecc71;
+  font-weight: bold;
+}

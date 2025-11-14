@@ -1,0 +1,91 @@
+/* Full-page perfect centering */
+.page-center {
+  height: 100vh; /* full screen height */
+  width: 100%;
+
+  display: flex;
+  flex-direction: column; /* 🔥 forces title above the upload box */
+  justify-content: center; /* horizontally center */
+  align-items: center; /* vertically center */
+}
+
+/* Upload box styling */
+.json-upload-container {
+  padding: 25px;
+  background: #f7f7f7;
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.json-upload-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.json-upload-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px dashed #646cff;
+  border-radius: 10px;
+  background: #ffffff;
+  cursor: pointer;
+  margin-bottom: 1.2rem;
+}
+
+.json-upload-input:hover {
+  border-color: #535bf2;
+}
+
+.json-error {
+  color: red;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.json-output {
+  margin-top: 1rem;
+  padding: 15px;
+  background: #eeeeee;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  max-height: 300px;
+  text-align: left;
+}
+
+.submit-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #e69500;
+}
+
+.submit-btn:disabled {
+  background-color: #d3d3d3;
+  cursor: not-allowed;
+}
+/* Bubble-letter pink title */
+.cuecard-title {
+  font-size: 3rem;
+  font-weight: 900;
+  color: #ff79c6; /* cute pink */
+  text-shadow: 3px 3px 0 #ffb6e6, -3px -3px 0 #ffb6e6, 3px -3px 0 #ffb6e6,
+    -3px 3px 0 #ffb6e6; /* bubble effect */
+
+  margin-bottom: 30px;
+  font-family: "Comic Sans MS", "Bubblegum Sans", cursive;
+}

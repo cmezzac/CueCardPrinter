@@ -6,29 +6,20 @@ export async function generateFlashcards(
   const pdfDoc = await PDFDocument.create();
   const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-  // Letter size
-  const PAGE_WIDTH = 612;
-  const PAGE_HEIGHT = 792;
+  const width = 612;
+  const height = 792;
 
-  const LEFT_MARGIN = 40;
-  const TOP_MARGIN = 80;
-  const MAX_TEXT_WIDTH = PAGE_WIDTH - LEFT_MARGIN * 2;
+  const leftMargin = 40;
+  const topMargin = 80;
+  const maxTextWidth = width - leftMargin * 2;
 
-  // 4 equal vertical sections
-  const SECTION_HEIGHT = (PAGE_HEIGHT - TOP_MARGIN - 40) / 4;
+  const sectionHeight = (height - topMargin - 40) / 4;
 
-  // Internal padding inside each section
-  const SECTION_PADDING = 20;
+  const sectionPadding = 20;
+  const lineHeight = 18;
 
-  // Line height
-  const LINE_HEIGHT = 18;
+  const reducedWidthFactor = 0.6;
 
-  // ALWAYS wrap at 60% of available width
-  const REDUCED_WIDTH_FACTOR = 0.6;
-
-  // -----------------------------
-  // WORD WRAP HELPER
-  // -----------------------------
   function wrapText(text: string, maxWidth: number, fontSize: number) {
     const words = text.split(" ");
     const lines: string[] = [];
@@ -50,9 +41,6 @@ export async function generateFlashcards(
     return lines;
   }
 
-  // -----------------------------
-  // DASHED LINE (CUT GUIDES)
-  // -----------------------------
   function drawDashedLine(
     page: any,
     xStart: number,
@@ -78,16 +66,7 @@ export async function generateFlashcards(
     }
   }
 
-  // -----------------------------
-  // SMALL CROP MARKS
-  // -----------------------------
-  function drawCropMark(
-    page: any,
-    x: number,
-    y: number,
-    length = 8,
-    thickness = 0.8
-  ) {
+  function drawCropMark(page: any, x: number, y: number, length = 8, thickness = 0.8) {
     const color = rgb(0.3, 0.3, 0.3);
 
     page.drawRectangle({
@@ -99,99 +78,116 @@ export async function generateFlashcards(
     });
   }
 
-  // -----------------------------
-  // ADD PAGE + CUT LINES
-  // -----------------------------
+  function drawVerticalCutMark(
+    page: any,
+    x: number,
+    yTop: number,
+    yBottom: number,
+    thickness = 0.8,
+    dash = 8,
+    gap = 6
+  ) {
+    const color = rgb(0.3, 0.3, 0.3);
+    let y = yBottom;
+
+    while (y < yTop) {
+      const h = Math.min(dash, yTop - y);
+      page.drawRectangle({
+        x: x - thickness / 2,
+        y,
+        width: thickness,
+        height: h,
+        color,
+      });
+      y += dash + gap;
+    }
+  }
+
   const addPage = (title: string) => {
-    const page = pdfDoc.addPage([PAGE_WIDTH, PAGE_HEIGHT]);
+    const page = pdfDoc.addPage([width, height]);
     page.setFont(font);
     page.setFontSize(16);
 
-    // Page title
     page.drawText(title, {
-      x: LEFT_MARGIN,
-      y: PAGE_HEIGHT - 50,
+      x: leftMargin,
+      y: height - 50,
       color: rgb(0, 0, 0),
     });
 
-    // Draw dashed lines between 4 sections
     for (let s = 1; s <= 3; s++) {
-      const y = PAGE_HEIGHT - TOP_MARGIN - SECTION_HEIGHT * s;
+      const y = height - topMargin - sectionHeight * s;
 
-      drawDashedLine(page, LEFT_MARGIN + 4, PAGE_WIDTH - LEFT_MARGIN - 4, y);
+      drawDashedLine(page, leftMargin + 4, width - leftMargin - 4, y);
 
-      // Crop marks slightly outside
-      drawCropMark(page, LEFT_MARGIN - 12, y);
-      drawCropMark(page, PAGE_WIDTH - LEFT_MARGIN + 12, y);
+      drawCropMark(page, leftMargin - 12, y);
+      drawCropMark(page, width - leftMargin + 12, y);
     }
 
     return page;
   };
 
-  // -----------------------------
-  // MAIN LOOP — 4 AT A TIME
-  // -----------------------------
   for (let i = 0; i < jsonData.length; i += 4) {
     const group = jsonData.slice(i, i + 4);
 
-    // -------------------------
-    // QUESTIONS PAGE
-    // -------------------------
     const qPage = addPage("Questions");
 
     group.forEach((item, idx) => {
-      const sectionTopY = PAGE_HEIGHT - TOP_MARGIN - SECTION_HEIGHT * idx;
+      const sectionTopY = height - topMargin - sectionHeight * idx;
+      const sectionBottomY = sectionTopY - sectionHeight;
 
-      const maxWidth = MAX_TEXT_WIDTH * REDUCED_WIDTH_FACTOR;
+      const cutX = leftMargin + maxTextWidth * reducedWidthFactor;
+
+      drawVerticalCutMark(qPage, cutX, sectionTopY - 4, sectionBottomY + 4);
+
+      const maxWidth = maxTextWidth * reducedWidthFactor;
       const lines = wrapText(item.question, maxWidth, 14);
 
-      let y = sectionTopY - SECTION_PADDING;
-      const bottomLimit = sectionTopY - SECTION_HEIGHT + SECTION_PADDING;
+      let y = sectionTopY - sectionPadding;
+      const bottomLimit = sectionBottomY + sectionPadding;
 
       for (const line of lines) {
         if (y < bottomLimit) break;
 
         qPage.drawText(line, {
-          x: LEFT_MARGIN,
+          x: leftMargin,
           y,
           size: 14,
         });
 
-        y -= LINE_HEIGHT;
+        y -= lineHeight;
       }
     });
 
-    // -------------------------
-    // ANSWERS PAGE
-    // -------------------------
     const aPage = addPage("Answers");
 
     group.forEach((item, idx) => {
-      const sectionTopY = PAGE_HEIGHT - TOP_MARGIN - SECTION_HEIGHT * idx;
+      const sectionTopY = height - topMargin - sectionHeight * idx;
+      const sectionBottomY = sectionTopY - sectionHeight;
 
-      const maxWidth = MAX_TEXT_WIDTH * REDUCED_WIDTH_FACTOR;
+      const cutX = leftMargin + maxTextWidth * reducedWidthFactor;
+
+      drawVerticalCutMark(aPage, cutX, sectionTopY - 4, sectionBottomY + 4);
+
+      const maxWidth = maxTextWidth * reducedWidthFactor;
       const lines = wrapText(item.answer, maxWidth, 14);
 
-      let y = sectionTopY - SECTION_PADDING;
-      const bottomLimit = sectionTopY - SECTION_HEIGHT + SECTION_PADDING;
+      let y = sectionTopY - sectionPadding;
+      const bottomLimit = sectionBottomY + sectionPadding;
 
       for (const line of lines) {
         if (y < bottomLimit) break;
 
         aPage.drawText(line, {
-          x: LEFT_MARGIN,
+          x: leftMargin,
           y,
           size: 14,
         });
 
-        y -= LINE_HEIGHT;
+        y -= lineHeight;
       }
     });
   }
 
-  // -----------------------------
-  // SAVE + DOWNLOAD
-  // -----------------------------
   const pdfBytes = await pdfDoc.save();
   const safeBytes = new Uint8Array(pdfBytes);
 

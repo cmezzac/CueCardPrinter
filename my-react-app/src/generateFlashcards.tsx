@@ -66,7 +66,13 @@ export async function generateFlashcards(
     }
   }
 
-  function drawCropMark(page: any, x: number, y: number, length = 8, thickness = 0.8) {
+  function drawCropMark(
+    page: any,
+    x: number,
+    y: number,
+    length = 8,
+    thickness = 0.8
+  ) {
     const color = rgb(0.3, 0.3, 0.3);
 
     page.drawRectangle({
@@ -164,11 +170,11 @@ export async function generateFlashcards(
       const sectionTopY = height - topMargin - sectionHeight * idx;
       const sectionBottomY = sectionTopY - sectionHeight;
 
-      const cutX = leftMargin + maxTextWidth * reducedWidthFactor;
+      const cutX = leftMargin + maxTextWidth * (1 - reducedWidthFactor);
 
       drawVerticalCutMark(aPage, cutX, sectionTopY - 4, sectionBottomY + 4);
 
-      const maxWidth = maxTextWidth * reducedWidthFactor;
+      const maxWidth = maxTextWidth * (1 - reducedWidthFactor);
       const lines = wrapText(item.answer, maxWidth, 14);
 
       let y = sectionTopY - sectionPadding;
@@ -178,7 +184,7 @@ export async function generateFlashcards(
         if (y < bottomLimit) break;
 
         aPage.drawText(line, {
-          x: leftMargin,
+          x: cutX + sectionPadding,
           y,
           size: 14,
         });

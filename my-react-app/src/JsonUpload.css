@@ -1,15 +1,13 @@
-/* Full-page perfect centering */
 .page-center {
-  height: 100vh; /* full screen height */
+  height: 100vh; 
   width: 100%;
 
   display: flex;
-  flex-direction: column; /* 🔥 forces title above the upload box */
-  justify-content: center; /* horizontally center */
-  align-items: center; /* vertically center */
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
 }
 
-/* Upload box styling */
 .json-upload-container {
   padding: 25px;
   background: #f7f7f7;
@@ -78,7 +76,6 @@
   background-color: #d3d3d3;
   cursor: not-allowed;
 }
-/* Bubble-letter pink title */
 .cuecard-title {
   font-size: 3rem;
   font-weight: 900;
@@ -90,12 +87,10 @@
   font-family: "Comic Sans MS", "Bubblegum Sans", cursive;
 }
 
-/* ================================
-   INSTRUCTION BOX
-================================ */
+
 
 .instruction-box {
-  background: #fff4fa; /* light soft pink */
+  background: #fff4fa; 
   border: 2px solid #ffb6e6;
   border-radius: 12px;
   padding: 20px;
@@ -151,8 +146,8 @@
 
 .loading-bar {
   width: 100%;
-  max-width: 400px;  /* keeps it nice looking */
-  margin: 0 auto;    /* centers the bar */
+  max-width: 400px;  
+  margin: 0 auto;   
   height: 10px;
   background: #e0e0ff;
   border-radius: 5px;
@@ -160,7 +155,7 @@
   position: relative;
 }
 
-/* The animated fill */
+
 .loading-bar::after {
   content: "";
   position: absolute;

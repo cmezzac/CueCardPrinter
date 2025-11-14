@@ -82,7 +82,6 @@ export default function JsonUpload() {
         const parsed = JSON.parse(text) as CueCard[];
         setJsonData(parsed);
 
-        // 🔥 Fake 3-second loading animation
         setTimeout(() => {
           setIsLoading(false);
           setIsComplete(true);
@@ -102,7 +101,6 @@ export default function JsonUpload() {
     <div className="page-center">
       <div className="json-upload-container">
 
-        {/* Instruction Box */}
         <div className="instruction-box">
           <div className="instruction-header">
             <span>Attach this prompt to your AI chat</span>
@@ -134,7 +132,7 @@ export default function JsonUpload() {
 
         {error && <p className="json-error">{error}</p>}
 
-        {/* 🔥 Fake loading bar */}
+
         {isLoading && (
           <div className="loading-bar-wrapper">
             <div className="loading-bar"></div>
@@ -142,14 +140,13 @@ export default function JsonUpload() {
           </div>
         )}
 
-        {/* 🔥 Success message */}
+
         {isComplete && (
           <p className="success-message">
             Your cue cards are ready!
           </p>
         )}
 
-        {/* 🔥 Generate Button */}
         <button
           className="submit-btn"
           onClick={() => jsonData && generateFlashcards(jsonData)}
